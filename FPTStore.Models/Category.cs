@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace FPTStoreWeb.Models
+namespace FPTStore.Models
 {
     public class Category
     {
@@ -13,7 +13,7 @@ namespace FPTStoreWeb.Models
         public string CategoryName { get; set; }
 
         [DisplayName("Display Order")]
-        [Range(1,100,ErrorMessage ="Display Order must be between 1-100")]
-        public int DisplayOrder {  get; set; }
+        [Range(1, 100, ErrorMessage = "Display Order must be between 1-100")]
+        public int DisplayOrder { get; set; }
     }
 }

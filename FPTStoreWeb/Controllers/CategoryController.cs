@@ -1,5 +1,5 @@
-﻿using FPTStoreWeb.Data;
-using FPTStoreWeb.Models;
+﻿using FPTStore.DataAccess.Data;
+using FPTStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FPTStoreWeb.Controllers

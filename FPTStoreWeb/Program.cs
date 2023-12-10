@@ -1,4 +1,4 @@
-using FPTStoreWeb.Data;
+using FPTStore.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime;
 

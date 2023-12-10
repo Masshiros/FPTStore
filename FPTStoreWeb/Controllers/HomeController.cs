@@ -1,4 +1,4 @@
-using FPTStoreWeb.Models;
+using FPTStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

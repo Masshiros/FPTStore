@@ -1,6 +1,6 @@
-﻿using FPTStoreWeb.Models;
+﻿using FPTStore.Models;
 using Microsoft.EntityFrameworkCore;
-namespace FPTStoreWeb.Data
+namespace FPTStore.DataAccess.Data
 {
     public class ApplicationDbContext : DbContext
     {

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace FPTStoreWeb.Migrations
+namespace FPTStore.DataAccess.Migrations
 {
     /// <inheritdoc />
     public partial class AddCategoryTableToDb : Migration

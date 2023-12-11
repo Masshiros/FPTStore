@@ -1,15 +1,17 @@
 ﻿using FPTStore.DataAccess.Data;
+using FPTStore.DataAccess.Repository.IRepository;
 using FPTStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FPTStoreWeb.Controllers
+namespace FPTStoreWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
         /**
          * @DESC: Display category page
@@ -21,7 +23,7 @@ namespace FPTStoreWeb.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            List<Category> objCategoryList = _db.Categories.ToList();
+            List<Category> objCategoryList = _unitOfWork.CategoryRepository.GetAll().ToList();
             return View(objCategoryList);
         }
         /**
@@ -46,14 +48,14 @@ namespace FPTStoreWeb.Controllers
         [HttpPost]
         public IActionResult Create(Category categoryObj)
         {
-            if(categoryObj.CategoryName == categoryObj.DisplayOrder.ToString())
+            if (categoryObj.CategoryName == categoryObj.DisplayOrder.ToString())
             {
                 ModelState.AddModelError("CategoryName", "The DisplayOrder cannot exactly match the Category Name");
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(categoryObj);
-                _db.SaveChanges();
+                _unitOfWork.CategoryRepository.Add(categoryObj);
+                _unitOfWork.Save();
                 TempData["success"] = "Create category successfully";
                 return RedirectToAction("Index");
             }
@@ -73,7 +75,7 @@ namespace FPTStoreWeb.Controllers
             {
                 return NotFound();
             }
-            Category? category = _db.Categories.Find(id);
+            Category? category = _unitOfWork.CategoryRepository.Get(u => u.CategoryId == id);
             if (category == null)
             {
                 return NotFound();
@@ -92,8 +94,8 @@ namespace FPTStoreWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(categoryObj);
-                _db.SaveChanges();
+                _unitOfWork.CategoryRepository.Update(categoryObj);
+                _unitOfWork.Save();
                 TempData["success"] = "Edit category successfully";
                 return RedirectToAction("Index");
             }
@@ -113,7 +115,7 @@ namespace FPTStoreWeb.Controllers
             {
                 return NotFound();
             }
-            Category? category = _db.Categories.Find(id);
+            Category? category = _unitOfWork.CategoryRepository.Get(u => u.CategoryId == id);
             if (category == null)
             {
                 return NotFound();
@@ -127,20 +129,20 @@ namespace FPTStoreWeb.Controllers
         * @RETURN: ViewResult
         *
         */
-        [HttpPost,ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
-            Category? categoryObj = _db.Categories.Find(id);
+            Category? categoryObj = _unitOfWork.CategoryRepository.Get(u => u.CategoryId == id);
             if (categoryObj == null)
             {
                 return NotFound();
             }
-            _db.Categories.Remove(categoryObj);
-            _db.SaveChanges();
+            _unitOfWork.CategoryRepository.Remove(categoryObj);
+            _unitOfWork.Save();
             TempData["success"] = "Delete category successfully";
             return RedirectToAction("Index");
-           
-       
+
+
         }
     }
 }

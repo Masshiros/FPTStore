@@ -21,7 +21,7 @@ namespace FPTStore.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("FPTStoreWeb.Models.Category", b =>
+            modelBuilder.Entity("FPTStore.Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
@@ -31,7 +31,8 @@ namespace FPTStore.DataAccess.Migrations
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");

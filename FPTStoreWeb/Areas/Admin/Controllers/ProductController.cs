@@ -1,8 +1,11 @@
 ﻿using FPTStore.DataAccess.Data;
+using FPTStore.DataAccess.Repository;
 using FPTStore.DataAccess.Repository.IRepository;
 using FPTStore.Models;
+using FPTStore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Identity.Client;
 
 namespace FPTStoreWeb.Areas.Admin.Controllers
 {
@@ -10,9 +13,11 @@ namespace FPTStoreWeb.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
         /**
          * @DESC: Display product page
@@ -24,38 +29,52 @@ namespace FPTStoreWeb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            List<Product> objProductList = _unitOfWork.ProductRepository.GetAll().ToList();
+            List<Product> objProductList = _unitOfWork.ProductRepository.GetAll(includeProperties:"Category").ToList();
             
             return View(objProductList);
         }
         /**
-         * @DESC: Return the create product view
+         * @DESC: Return the update or insert product view
          * @METHOD: GET
-         * @PARAM
+         * @PARAM: int
          * @RETURN: ViewResult
          *
          */
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Upsert(int? id)
         {
-            IEnumerable<SelectListItem> CategoryList = _unitOfWork.CategoryRepository.GetAll().Select(u =>
-                new SelectListItem
-                {
-                    Text = u.CategoryName,
-                    Value = u.CategoryId.ToString()
-                });
-            ViewBag.CategoryList = CategoryList;
-            return View();
+            ProductVM productVM = new()
+            {
+                CategoryList = _unitOfWork.CategoryRepository.GetAll().Select(u =>
+                    new SelectListItem
+                    {
+                        Text = u.CategoryName,
+                        Value = u.CategoryId.ToString()
+                    }),
+                Product = new Product()
+            };
+            if (id == null | id == 0)
+            {
+                // update
+                return View(productVM);
+            }
+            else
+            {
+                // insert
+                productVM.Product = _unitOfWork.ProductRepository.Get(u => u.ProductId == id);
+                return View(productVM);
+            }
         }
+
         /**
-         * @DESC: Create new product
+         * @DESC: Create new product or edit product
          * @METHOD: POST
-         * @PARAM: Product
+         * @PARAM: ProductVM , IFormFile?
          * @RETURN: ViewResult
          *
          */
         [HttpPost]
-        public IActionResult Create(Product productObj)
+        public IActionResult Upsert(ProductVM productObj, IFormFile? file)
         {
             /*if (productObj.ProductTitle == productObj..ToString())
             {
@@ -63,95 +82,96 @@ namespace FPTStoreWeb.Areas.Admin.Controllers
             }*/
             if (ModelState.IsValid)
             {
-                _unitOfWork.ProductRepository.Add(productObj);
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = Path.Combine(wwwRootPath, @"images\product\");
+                    if (!string.IsNullOrEmpty(productObj.Product.ImageUrl))
+                    {
+                        // delete the old image 
+                        var oldImagePath = Path.Combine(wwwRootPath,productObj.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName),FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+
+                    productObj.Product.ImageUrl = @"\images\product\" + fileName;
+                }
+
+                // check whether action is add or update
+                if (productObj.Product.ProductId == 0)
+                {
+                    _unitOfWork.ProductRepository.Add(productObj.Product);
+                    TempData["success"] = "Create product successfully";
+                }
+                else
+                {
+                    _unitOfWork.ProductRepository.Update(productObj.Product);
+                    TempData["success"] = "Edit product successfully";
+                }
                 _unitOfWork.Save();
-                TempData["success"] = "Create product successfully";
+               
                 return RedirectToAction("Index");
             }
-            return View();
-        }
-        /**
-         * @DESC: Return the edit product view
-         * @METHOD: GET
-         * @PARAM: int
-         * @RETURN: ViewResult
-         *
-         */
-        [HttpGet]
-        public IActionResult Edit(int? id)
-        {
-            if (id == null || id == 0)
+            else
             {
-                return NotFound();
+                productObj.CategoryList = _unitOfWork.CategoryRepository.GetAll().Select(u =>
+                    new SelectListItem
+                    {
+                        Text = u.CategoryName,
+                        Value = u.CategoryId.ToString()
+                    });
+                TempData["error"] = "Some Error Happen";
+                return View(productObj);
             }
-            Product? product = _unitOfWork.ProductRepository.Get(u => u.ProductId == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
         }
-        /**
-        * @DESC: Edit product
-        * @METHOD: POST
-        * @PARAM: Product
-        * @RETURN: ViewResult
-        *
-        */
-        [HttpPost]
-        public IActionResult Edit(Product productObj)
-        {
-            if (ModelState.IsValid)
+        #region API CALLS
+            /**
+             * @DESC: API to fetch all product
+             * @METHOD: POST
+             * @PARAM: 
+             * @RETURN: JSON
+             *
+             */
+            [HttpGet]
+            public IActionResult GetAll()
             {
-                _unitOfWork.ProductRepository.Update(productObj);
+                List<Product> objProductList = _unitOfWork.ProductRepository.GetAll(includeProperties: "Category").ToList();
+                return Json(new { data = objProductList });
+            }
+            /**
+             * @DESC: API to delete product
+             * @METHOD: DELETE
+             * @PARAM: int
+             * @RETURN: JSON
+             *
+             */
+        [HttpDelete]
+            public IActionResult Delete(int? id)
+            {
+                var productToBeDeleted = _unitOfWork.ProductRepository.Get(u =>u.ProductId == id);
+                if (productToBeDeleted == null)
+                {
+                    return Json(new { success = false, message = "Error while deleting" });
+                }
+                // delete the old image 
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+                _unitOfWork.ProductRepository.Remove(productToBeDeleted);
                 _unitOfWork.Save();
-                TempData["success"] = "Edit product successfully";
-                return RedirectToAction("Index");
-            }
-            return View();
-        }
-        /**
-         * @DESC: Find the delete object
-         * @METHOD: GET
-         * @PARAM: int
-         * @RETURN: ViewResult
-         *
-         */
-        [HttpGet]
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            Product? product = _unitOfWork.ProductRepository.Get(u => u.ProductId == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
-        /**
-        * @DESC: Delete product
-        * @METHOD: POST
-        * @PARAM: int
-        * @RETURN: ViewResult
-        *
-        */
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(int? id)
-        {
-            Product? product = _unitOfWork.ProductRepository.Get(u => u.ProductId == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            _unitOfWork.ProductRepository.Remove(product);
-            _unitOfWork.Save();
-            TempData["success"] = "Delete product successfully";
-            return RedirectToAction("Index");
-
+              
+                return Json(new { success = true, message = "Delete Successful" });
 
         }
+            #endregion
     }
 }

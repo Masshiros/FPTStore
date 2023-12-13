@@ -19,7 +19,23 @@ namespace FPTStore.DataAccess.Repository
         }
         public void Update(Product productObj)
         {
-            _db.Products.Update(productObj);
+            var objFromDb = _db.Products.FirstOrDefault(u => u.ProductId == productObj.ProductId);
+            if (objFromDb != null)
+            {
+                objFromDb.ProductTitle = productObj.ProductTitle;
+                objFromDb.ISBN = productObj.ISBN;
+                objFromDb.Price = productObj.Price;
+                objFromDb.Price50 = productObj.Price50;
+                objFromDb.ListPrice = productObj.ListPrice;
+                objFromDb.Price100 = productObj.Price100;
+                objFromDb.ProductDescription = productObj.ProductDescription;
+                objFromDb.CategoryId = productObj.CategoryId;
+                objFromDb.ProductAuthor = productObj.ProductAuthor;
+                if (productObj.ImageUrl != null)
+                {
+                    objFromDb.ImageUrl = productObj.ImageUrl;
+                }
+            }
 
         }
     }

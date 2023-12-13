@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace FPTStore.Models
 {
@@ -38,8 +39,10 @@ namespace FPTStore.Models
         public double Price100 { get; set; }
 
         public int CategoryId { get; set; }
-        [ForeignKey("CategoryId")] 
+        [ForeignKey("CategoryId")]
+        [ValidateNever]
         public Category Category { get; set; }
+        [ValidateNever]
         public string ImageUrl { get; set; }
     }
 }

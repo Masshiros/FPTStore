@@ -3,6 +3,7 @@ using FPTStore.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FPTStore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231212025656_UpdateCategoryAndSeedProductToDb")]
+    partial class UpdateCategoryAndSeedProductToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,14 +79,7 @@ namespace FPTStore.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ISBN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -113,17 +109,13 @@ namespace FPTStore.DataAccess.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("Products");
 
                     b.HasData(
                         new
                         {
                             ProductId = 1,
-                            CategoryId = 1,
                             ISBN = "SWD9999001",
-                            ImageUrl = "",
                             ListPrice = 99.0,
                             Price = 90.0,
                             Price100 = 80.0,
@@ -135,9 +127,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 2,
-                            CategoryId = 2,
                             ISBN = "CAW777777701",
-                            ImageUrl = "",
                             ListPrice = 40.0,
                             Price = 30.0,
                             Price100 = 20.0,
@@ -149,9 +139,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 3,
-                            CategoryId = 2,
                             ISBN = "RITO5555501",
-                            ImageUrl = "",
                             ListPrice = 55.0,
                             Price = 50.0,
                             Price100 = 35.0,
@@ -163,9 +151,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 4,
-                            CategoryId = 3,
                             ISBN = "WS3333333301",
-                            ImageUrl = "",
                             ListPrice = 70.0,
                             Price = 65.0,
                             Price100 = 55.0,
@@ -177,9 +163,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 5,
-                            CategoryId = 2,
                             ISBN = "SOTJ1111111101",
-                            ImageUrl = "",
                             ListPrice = 30.0,
                             Price = 27.0,
                             Price100 = 20.0,
@@ -191,9 +175,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 6,
-                            CategoryId = 3,
                             ISBN = "FOT000000001",
-                            ImageUrl = "",
                             ListPrice = 25.0,
                             Price = 23.0,
                             Price100 = 20.0,
@@ -205,9 +187,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 7,
-                            CategoryId = 2,
                             ISBN = "EE999888801",
-                            ImageUrl = "",
                             ListPrice = 60.0,
                             Price = 55.0,
                             Price100 = 45.0,
@@ -219,9 +199,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 8,
-                            CategoryId = 1,
                             ISBN = "WITW777777701",
-                            ImageUrl = "",
                             ListPrice = 45.0,
                             Price = 40.0,
                             Price100 = 30.0,
@@ -233,9 +211,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 9,
-                            CategoryId = 2,
                             ISBN = "MM111122223301",
-                            ImageUrl = "",
                             ListPrice = 75.0,
                             Price = 70.0,
                             Price100 = 60.0,
@@ -247,9 +223,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 10,
-                            CategoryId = 1,
                             ISBN = "SSSS888888801",
-                            ImageUrl = "",
                             ListPrice = 35.0,
                             Price = 32.0,
                             Price100 = 28.0,
@@ -261,9 +235,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 11,
-                            CategoryId = 4,
                             ISBN = "ITA111122223301",
-                            ImageUrl = "",
                             ListPrice = 90.0,
                             Price = 85.0,
                             Price100 = 75.0,
@@ -275,9 +247,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 12,
-                            CategoryId = 4,
                             ISBN = "CCASH777777701",
-                            ImageUrl = "",
                             ListPrice = 55.0,
                             Price = 50.0,
                             Price100 = 40.0,
@@ -289,9 +259,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 13,
-                            CategoryId = 4,
                             ISBN = "PRAGMA3333333301",
-                            ImageUrl = "",
                             ListPrice = 70.0,
                             Price = 65.0,
                             Price100 = 55.0,
@@ -303,9 +271,7 @@ namespace FPTStore.DataAccess.Migrations
                         new
                         {
                             ProductId = 14,
-                            CategoryId = 4,
                             ISBN = "DPATTERN1111111101",
-                            ImageUrl = "",
                             ListPrice = 40.0,
                             Price = 35.0,
                             Price100 = 25.0,
@@ -314,17 +280,6 @@ namespace FPTStore.DataAccess.Migrations
                             ProductDescription = "Classic book on object-oriented design patterns.",
                             ProductTitle = "Design Patterns: Elements of Reusable Object-Oriented Software"
                         });
-                });
-
-            modelBuilder.Entity("FPTStore.Models.Product", b =>
-                {
-                    b.HasOne("FPTStore.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

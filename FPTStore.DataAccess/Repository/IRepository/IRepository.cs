@@ -13,8 +13,9 @@ namespace FPTStore.DataAccess.Repository.IRepository
         IEnumerable<T> GetAll(string? includeProperties = null);
         T Get(Expression<Func<T,bool>> filter, string? includeProperties = null);
         void Add(T item);
-        void Remove(T item);    
+        void Remove(T item);
         void RemoveRange(IEnumerable<T> items);
+        IEnumerable<T> Filter(Expression<Func<T, bool>> filter, string? includeProperties = null);
 
     }
 }

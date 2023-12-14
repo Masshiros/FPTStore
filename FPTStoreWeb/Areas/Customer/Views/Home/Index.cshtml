@@ -1,8 +1,74 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using X.PagedList.Mvc.Core;
+@model X.PagedList.IPagedList<Product>
+<div class="row">
+    @await Component.InvokeAsync("NavbarComponent")
+    <div class="col-lg-9">
+        <div class="hero__search">
+            <div class="hero__search__form">
+                <form action="#">
+                    <div class="hero__search__categories">
+                        All Categories
+                        <span class="arrow_carrot-down"></span>
+                    </div>
+                    <input type="text" placeholder="What do yo u need?">
+                    <button type="submit" class="site-btn">SEARCH</button>
+                </form>
+            </div>
+        </div>
+        <div class="hero__item set-bg bg-primary-subtle">
+            <div class="hero__text">
+                <span>NEW BOOK</span>
+                <h2>Book <br />100% Authentic</h2>
+                <p>Free Pickup and Delivery Available</p>
+                <a href="#" class="primary-btn">SHOP NOW</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row pb-3">
+    @foreach (var product in Model)
+    {
+        <div class="col-lg-3 col-sm-6">
+            <div class="row p-2">
+                <div class="col-12 p-1">
+                    <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                        <img src="@product.ImageUrl" class="card-img-top rounded"/>
+                        <div class="card-body pb-0">
+                            <div class="pl-1">
+                                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.ProductTitle</p>
+                                <p class="card-title text-warning text-center">by <b>@product.ProductAuthor</b></p>
+                            </div>
+                            <div class="pl-1">
+                                <p class="text-dark text-opacity-75 text-center mb-0">
+                                    List Price:
+                                    <span class="text-decoration-line-through">
+                                        @product.ListPrice.ToString("c")
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="pl-1">
+                                <p class="text-dark text-opacity-75 text-center">
+                                    As low as:
+                                    <span>
+                                        @product.Price100.ToString("c")
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <a asp-action="Details"
+                               asp-route-id="@product.ProductId"
+                               class="btn btn-primary bg-gradient border-0 form-control">
+                                Details
+                            </a>
+                        </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="product__pagination">
+    @Html.PagedListPager(Model, page => Url.Action("Index",new{page=page}))
 </div>

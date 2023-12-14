@@ -1,11 +1,14 @@
 ﻿using FPTStore.DataAccess.Data;
 using FPTStore.DataAccess.Repository.IRepository;
 using FPTStore.Models;
+using FPTStore.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FPTStoreWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

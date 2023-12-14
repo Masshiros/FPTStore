@@ -37,6 +37,7 @@ namespace FPTStore.DataAccess.Repository
                     query = query.Include(includeProp);
                 }
             }
+
             return query.FirstOrDefault();
         }
 
@@ -58,10 +59,25 @@ namespace FPTStore.DataAccess.Repository
         {
             dbSet.Remove(item);
         }
-
+       
         public void RemoveRange(IEnumerable<T> items)
         {
             dbSet.RemoveRange(items);
+        }
+
+        public IEnumerable<T> Filter(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        {
+            IQueryable<T> query = dbSet;
+            query = query.Where(filter);
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                             .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+            return query.ToList();
         }
     }
 }

@@ -3,6 +3,8 @@ using FPTStore.DataAccess.Repository;
 using FPTStore.DataAccess.Repository.IRepository;
 using FPTStore.Models;
 using FPTStore.Models.ViewModels;
+using FPTStore.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client;
@@ -10,6 +12,7 @@ using Microsoft.Identity.Client;
 namespace FPTStoreWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

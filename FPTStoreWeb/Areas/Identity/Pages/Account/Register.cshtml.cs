@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using FPTStore.DataAccess.Repository.IRepository;
 using FPTStore.Models;
 using FPTStore.Utility;
 using JetBrains.Annotations;
@@ -35,15 +36,17 @@ namespace FPTStoreWeb.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+        private readonly IUnitOfWork _unitOfWork;
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
@@ -117,6 +120,9 @@ namespace FPTStoreWeb.Areas.Identity.Pages.Account
             [CanBeNull] public string State { get; set; }
             [CanBeNull] public string PostalCode { get; set; }
             [CanBeNull] public string PhoneNumber { get; set; }
+            [CanBeNull] public int CompanyId { get; set; }
+            [ValidateNever]
+            public IEnumerable<SelectListItem> CompanyList { get; set; }
 
         }
 
@@ -137,6 +143,11 @@ namespace FPTStoreWeb.Areas.Identity.Pages.Account
                 {
                     Text = i,
                     Value = i
+                }),
+                CompanyList = _unitOfWork.CompanyRepository.GetAll().Select(i => new SelectListItem()
+                {
+                    Text = i.CompanyName,
+                    Value = i.CompanyId.ToString()
                 })
             };
             ReturnUrl = returnUrl;
@@ -159,7 +170,10 @@ namespace FPTStoreWeb.Areas.Identity.Pages.Account
                 user.UserName = Input.Name;
                 user.UserPostalCode = Input.PostalCode;
                 user.PhoneNumber = Input.PhoneNumber;
-                
+                if (Input.Role == SD.Role_Company)
+                {
+                    user.CompanyId = Input.CompanyId;
+                }
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

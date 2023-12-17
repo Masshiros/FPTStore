@@ -58,12 +58,12 @@ namespace FPTStoreWeb.Areas.Admin.Controllers
             };
             if (id == null | id == 0)
             {
-                // update
+                // insert
                 return View(productVM);
             }
             else
             {
-                // insert
+                // update
                 productVM.Product = _unitOfWork.ProductRepository.Get(u => u.ProductId == id);
                 return View(productVM);
             }
@@ -155,7 +155,7 @@ namespace FPTStoreWeb.Areas.Admin.Controllers
              * @RETURN: JSON
              *
              */
-        [HttpDelete]
+            [HttpDelete]
             public IActionResult Delete(int? id)
             {
                 var productToBeDeleted = _unitOfWork.ProductRepository.Get(u =>u.ProductId == id);
@@ -174,7 +174,7 @@ namespace FPTStoreWeb.Areas.Admin.Controllers
               
                 return Json(new { success = true, message = "Delete Successful" });
 
-        }
+            }
             #endregion
     }
 }

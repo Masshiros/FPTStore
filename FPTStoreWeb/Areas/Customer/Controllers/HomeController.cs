@@ -1,7 +1,9 @@
 using FPTStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 using FPTStore.DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using X.PagedList;
 
 namespace FPTStoreWeb.Areas.Customer.Controllers
@@ -44,17 +46,59 @@ namespace FPTStoreWeb.Areas.Customer.Controllers
             return View(productList);
         }
         /**
-        * @DESC: Display home page
+        * @DESC: Display details page
         * @METHOD: GET
-        * @PARAM
+        * @PARAM: int
         * @RETURN: ViewResult
         *
         */
         public IActionResult Details(int id)
         {
-            Product productObj = _unitOfWork.ProductRepository.Get(u => u.ProductId == id,includeProperties: "Category");
+            ShoppingCart cart = new()
+            {
+                Product = _unitOfWork.ProductRepository.Get(u => u.ProductId == id, includeProperties: "Category"),
+                Count = 1,
+                ProductId = id
+            };
+           
 
-            return View(productObj);
+            return View(cart);
+        }
+        /**
+        * @DESC: Add to cart on details page
+        * @METHOD: POST
+        * @PARAM: ShoppingCart
+        * @RETURN: ViewResult
+        *
+        */
+        [HttpPost]
+        [Authorize]
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            // get user id
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.ApplicationUserId = userId;
+            // prevent duplicate shopping cart with same userId and productId
+            ShoppingCart cartExist = _unitOfWork.ShoppingCartRepository.Get(u =>
+                u.ApplicationUserId == userId && u.ProductId == shoppingCart.ProductId);
+            if (cartExist != null)
+            {
+                // cart already exist - update the count in cart 
+                cartExist.Count += shoppingCart.Count;
+                _unitOfWork.ShoppingCartRepository.Update(cartExist);
+            }
+            else
+            {
+                // new cart - add new
+                _unitOfWork.ShoppingCartRepository.Add(shoppingCart);
+            }
+
+            TempData["success"] = "Add to cart successfully";
+          
+            _unitOfWork.Save();
+
+            return RedirectToAction(nameof(Index));
         }
         public IActionResult Privacy()
         {

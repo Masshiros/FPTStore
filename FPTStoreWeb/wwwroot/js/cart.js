@@ -48,7 +48,7 @@ function cart() {
                     </div>`
             });
             var cartTotal = `<h5 class="text-dark fw-semibold text-uppercase"> Total (VND)</h5>
-                             <h4 class="text-dark fw-bolder">${response.data.orderTotal.toLocaleString('vi-VN', {
+                             <h4 class="text-dark fw-bolder">${response.data.orderHeader.orderTotal.toLocaleString('vi-VN', {
                                  style: 'currency',
                                  currency: 'VND'
                              })} </h4>`

@@ -13,6 +13,8 @@ namespace FPTStore.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        
+        public string? Name {get; set; }
         public string? UserStreetAddress { get; set; }
         public string? UserCity { get; set; }
         public string? UserState { get; set; }

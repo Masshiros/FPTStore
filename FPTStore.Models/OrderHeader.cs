@@ -19,7 +19,7 @@ namespace FPTStore.Models
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
         public DateTime OrderDate { get; set; }
-        public DateTime ShoppingDate { get; set; }
+        public DateTime ShippingDate { get; set; }
         public double OrderTotal { get; set; }
         public string? OrderStatus { get; set; }
         public string? PaymentStatus { get; set; }

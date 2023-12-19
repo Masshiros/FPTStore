@@ -167,7 +167,7 @@ namespace FPTStoreWeb.Areas.Identity.Pages.Account
                 user.UserCity = Input.City;
                 user.UserStreetAddress = Input.StreetAddress;
                 user.UserState = Input.State;
-                user.UserName = Input.Name;
+                user.Name = Input.Name;
                 user.UserPostalCode = Input.PostalCode;
                 user.PhoneNumber = Input.PhoneNumber;
                 if (Input.Role == SD.Role_Company)

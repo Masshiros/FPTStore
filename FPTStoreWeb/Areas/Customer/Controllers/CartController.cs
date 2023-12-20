@@ -181,6 +181,7 @@ namespace FPTStoreWeb.Areas.Customer.Controllers
                     _unitOfWork.OrderHeaderRepository.UpdateStatus(id,SD.StatusApproved,SD.PaymentStatusApproved);
                     _unitOfWork.Save();
                 }
+                    HttpContext.Session.Clear();
             }
             // remove user's cart
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCartRepository.GetAll(u=>u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
@@ -265,6 +266,9 @@ namespace FPTStoreWeb.Areas.Customer.Controllers
             if (cartFromDb.Count <= 1)
             {
                 _unitOfWork.ShoppingCartRepository.Remove(cartFromDb);
+
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCartRepository
+                    .GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
             }
             else
             {
@@ -285,7 +289,10 @@ namespace FPTStoreWeb.Areas.Customer.Controllers
         public IActionResult Remove(int cartId)
         {
             var cartFromDb = _unitOfWork.ShoppingCartRepository.Get(u => u.ShoppingCartId == cartId);
+          
             _unitOfWork.ShoppingCartRepository.Remove(cartFromDb);
+            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCartRepository
+                .GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
             _unitOfWork.Save();
             return Json(new { success = true, data = cartFromDb });
 

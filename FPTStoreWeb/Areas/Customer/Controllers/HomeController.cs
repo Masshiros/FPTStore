@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using FPTStore.DataAccess.Repository.IRepository;
+using FPTStore.Utility;
 using Microsoft.AspNetCore.Authorization;
 using X.PagedList;
 
@@ -28,6 +29,7 @@ namespace FPTStoreWeb.Areas.Customer.Controllers
          */
         public IActionResult Index(int? catId, int? page)
         {
+           
             int pageSize = 8;
             int pageNumber = page == null|| page < 0 ? 1 : page.Value;
 
@@ -87,16 +89,21 @@ namespace FPTStoreWeb.Areas.Customer.Controllers
                 // cart already exist - update the count in cart 
                 cartExist.Count += shoppingCart.Count;
                 _unitOfWork.ShoppingCartRepository.Update(cartExist);
+                _unitOfWork.Save();
             }
             else
             {
                 // new cart - add new
                 _unitOfWork.ShoppingCartRepository.Add(shoppingCart);
+                _unitOfWork.Save();
+                // set session
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCartRepository.GetAll(u =>
+                    u.ApplicationUserId == userId).Count());
             }
 
             TempData["success"] = "Add to cart successfully";
           
-            _unitOfWork.Save();
+           
 
             return RedirectToAction(nameof(Index));
         }

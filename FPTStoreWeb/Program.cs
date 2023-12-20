@@ -3,6 +3,7 @@ using FPTStore.DataAccess.Repository;
 using FPTStore.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime;
+using FPTStore.DataAccess.DBInitializer;
 using FPTStore.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -22,12 +23,18 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.LogoutPath = $"/Identity/Account/Logout";
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
+builder.Services.AddAuthentication().AddFacebook(option =>
+{
+    option.AppId = "729179018793301";
+    option.AppSecret = "6a336fd02c80ad16991c0bc46f360d58";
+});
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => {
     options.IdleTimeout = TimeSpan.FromMinutes(100);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddRazorPages();
 // Register unit of work
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
@@ -52,6 +59,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+SeedDatabase();
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
@@ -59,3 +67,12 @@ app.MapControllerRoute(
 
 
 app.Run();
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+       var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+       dbInitializer.Initialize();
+    }
+}

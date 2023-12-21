@@ -230,8 +230,10 @@ namespace FPTStoreWeb.Areas.Customer.Controllers
                 OrderHeader = new()
 
             };
+            IEnumerable<ProductImage> productImages = _unitOfWork.ProductImageRepository.GetAll();
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
+                cart.Product.ProductImages = productImages.Where(u => u.ProductId == cart.Product.ProductId).ToList();
                 cart.Price = GetPriceBasedOnQuantity(cart);
                 ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             }

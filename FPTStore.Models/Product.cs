@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
@@ -42,7 +43,10 @@ namespace FPTStore.Models
         [ForeignKey("CategoryId")]
         [ValidateNever]
         public Category Category { get; set; }
+
         [ValidateNever]
-        public string ImageUrl { get; set; }
+        
+        public List<ProductImage> ProductImages { get; set; }
+       
     }
 }

@@ -31,10 +31,11 @@ namespace FPTStore.DataAccess.Repository
                 objFromDb.ProductDescription = productObj.ProductDescription;
                 objFromDb.CategoryId = productObj.CategoryId;
                 objFromDb.ProductAuthor = productObj.ProductAuthor;
-                if (productObj.ImageUrl != null)
-                {
-                    objFromDb.ImageUrl = productObj.ImageUrl;
-                }
+                objFromDb.ProductImages = productObj.ProductImages;
+                /*  if (productObj.ImageUrl != null)
+                  {
+                      objFromDb.ImageUrl = productObj.ImageUrl;
+                  }*/
             }
 
         }

@@ -9,18 +9,18 @@ using FPTStore.Models;
 
 namespace FPTStore.DataAccess.Repository
 {
-    public class ApplicationUserRepository : Repository<ApplicationUser>, IApplicationUserRepository
+    public class ProductImageRepository : Repository<ProductImage>, IProductImageRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public ApplicationUserRepository(ApplicationDbContext db) : base(db)
+        public ProductImageRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
 
-        public void Update(ApplicationUser user)
+        public void Update(ProductImage productImage)
         {
-            _db.ApplicationUsers.Update(user);
+            _db.ProductImages.Update(productImage);
         }
     }
 }

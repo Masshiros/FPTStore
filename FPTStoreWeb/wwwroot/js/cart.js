@@ -11,7 +11,7 @@ function cart() {
             $.each(response.data.shoppingCartList, function (key, value) {
                 content += `<div class="row border-bottom pb-3">
                         <div class="d-none d-lg-block col-lg-1 text-center py-2">
-                            ${value.product.imageUrl != null ? ` <img src="${value.product.imageUrl}" class="card-img-top rounded w-100" />` : `<img src="https://placehold.co/500x600/png" class="card-img-top rounded w-100" />`}
+                            ${value.product.productImages != null && value.product.productImages.length > 0 ? ` <img src="${value.product.productImages[0].imageUrl}" class="card-img-top rounded w-100" />` : `<img src="https://placehold.co/500x600/png" class="card-img-top rounded w-100" />`}
                         </div>
                         <div class="col-12 col-lg-6 pt-md-3">
                             <h5 class="text-uppercase text-secondary"><strong>${value.product.productTitle}</strong></h5>

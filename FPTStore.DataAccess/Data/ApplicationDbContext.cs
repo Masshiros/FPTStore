@@ -17,6 +17,7 @@ namespace FPTStore.DataAccess.Data
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<OrderHeader> OrderHeaders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -41,7 +42,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 85,
                     Price100 = 80,
                     CategoryId = 1,
-                    ImageUrl = ""
+                    
                 },
                 new Product
                 {
@@ -55,7 +56,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 25,
                     Price100 = 20,
                     CategoryId = 2,
-                    ImageUrl = ""
+                  
                 },
                 new Product
                 {
@@ -69,7 +70,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 40,
                     Price100 = 35,
                     CategoryId = 2,
-                    ImageUrl = ""
+                   
                 },
                 new Product
                 {
@@ -83,7 +84,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 60,
                     Price100 = 55,
                     CategoryId = 3,
-                    ImageUrl = ""
+                    
                 },
                 new Product
                 {
@@ -97,7 +98,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 25,
                     Price100 = 20,
                     CategoryId = 2,
-                    ImageUrl = ""
+                    
                 },
                 new Product
                 {
@@ -111,7 +112,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 22,
                     Price100 = 20,
                     CategoryId = 3,
-                    ImageUrl = ""
+                    
                 },
                 new Product
                 {
@@ -125,7 +126,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 50,
                     Price100 = 45,
                     CategoryId = 2,
-                    ImageUrl = ""
+                  
                 },
                 new Product
                 {
@@ -139,7 +140,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 35,
                     Price100 = 30,
                     CategoryId = 1,
-                    ImageUrl = ""
+                   
                 },
                 new Product
                 {
@@ -153,7 +154,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 65,
                     Price100 = 60,
                     CategoryId = 2,
-                    ImageUrl = ""
+                    
                 },
                 new Product
                 {
@@ -167,7 +168,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 30,
                     Price100 = 28,
                     CategoryId = 1,
-                    ImageUrl = ""
+                   
                 },
                 new Product
                 {
@@ -181,7 +182,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 80,
                     Price100 = 75,
                     CategoryId = 4,
-                    ImageUrl = ""
+                    
                 },
                 new Product
                 {
@@ -195,7 +196,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 45,
                     Price100 = 40,
                     CategoryId = 4,
-                    ImageUrl = ""
+                    
                 },
                 new Product
                 {
@@ -209,7 +210,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 60,
                     Price100 = 55,
                     CategoryId = 4,
-                    ImageUrl = ""
+                   
                 },
                 new Product
                 {
@@ -223,7 +224,7 @@ namespace FPTStore.DataAccess.Data
                     Price50 = 30,
                     Price100 = 25,
                     CategoryId = 4,
-                    ImageUrl = ""
+                    
                 }
             );
         }

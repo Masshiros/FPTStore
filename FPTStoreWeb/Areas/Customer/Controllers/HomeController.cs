@@ -41,7 +41,7 @@ namespace FPTStoreWeb.Areas.Customer.Controllers
             }
             else
             {
-                objProductList = _unitOfWork.ProductRepository.GetAll(includeProperties: "Category").ToList();
+                objProductList = _unitOfWork.ProductRepository.GetAll(includeProperties: "Category,ProductImages").ToList();
             }
 
             PagedList<Product> productList = new PagedList<Product>(objProductList, pageNumber,pageSize);
@@ -58,7 +58,7 @@ namespace FPTStoreWeb.Areas.Customer.Controllers
         {
             ShoppingCart cart = new()
             {
-                Product = _unitOfWork.ProductRepository.Get(u => u.ProductId == id, includeProperties: "Category"),
+                Product = _unitOfWork.ProductRepository.Get(u => u.ProductId == id, includeProperties: "Category,ProductImages"),
                 Count = 1,
                 ProductId = id
             };

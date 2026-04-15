@@ -210,7 +210,7 @@ class AlertTest extends \Codeception\Test\Unit
         $firstErrorMessage = 'This is the first error message';
         $secondErrorMessage = 'This is the second error message';
         $firstDangerMessage = 'This is the first danger message';
-        $secondDangerMessage = 'This is the second';
+        $secondDangerMessage = 'This is the second danger message';
         $firstSuccessMessage = 'This is the first success message';
         $secondSuccessMessage = 'This is the second success message';
         $firstInfoMessage = 'This is the first info message';

@@ -38,7 +38,7 @@ Nó **không tự có business feature** (CRUD, API thật, module riêng...), b
 
 ### Bước 1: vào thư mục
 ```bash
-cd /home/runner/work/FPTStore/FPTStore/yii-wordpress-starter
+cd yii-wordpress-starter
 ```
 
 ### Bước 2: chạy stack

@@ -13,7 +13,7 @@ class LoginFormTest extends \Codeception\Test\Unit
         \Yii::$app->user->logout();
     }
 
-    public function testLoginNoUser()
+    public function testLoginWithNonExistentUser()
     {
         $this->model = new LoginForm([
             'username' => 'not_existing_username',

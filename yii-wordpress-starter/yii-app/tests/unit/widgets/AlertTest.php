@@ -59,8 +59,8 @@ class AlertTest extends \Codeception\Test\Unit
 
     public function testMultipleDangerMessages()
     {
-        $firstMessage = 'This is the first success message';
-        $secondMessage = 'This is the second success message';
+        $firstMessage = 'This is the first danger message';
+        $secondMessage = 'This is the second danger message';
 
         Yii::$app->session->setFlash('danger', [$firstMessage, $secondMessage]);
 
@@ -93,8 +93,8 @@ class AlertTest extends \Codeception\Test\Unit
 
     public function testMultipleSuccessMessages()
     {
-        $firstMessage = 'This is the first danger message';
-        $secondMessage = 'This is the second danger message';
+        $firstMessage = 'This is the first success message';
+        $secondMessage = 'This is the second success message';
 
         Yii::$app->session->setFlash('success', [$firstMessage, $secondMessage]);
 
